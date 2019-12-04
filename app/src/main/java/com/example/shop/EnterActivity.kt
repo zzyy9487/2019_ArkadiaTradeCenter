@@ -17,9 +17,9 @@ class EnterActivity : AppCompatActivity(), ViewPropertyAnimatorListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter)
 
-        ViewCompat.animate(arkadia).scaleX(0.8f).scaleY(0.8f).setListener(this@EnterActivity).setDuration(6000)
+        ViewCompat.animate(arkadia).scaleX(0.8f).scaleY(0.8f).setListener(this@EnterActivity).setDuration(3500)
 
-        ViewCompat.animate(splash_image).scaleX(1.6f).scaleY(1.6f).setListener(this@EnterActivity).setDuration(6000)
+        ViewCompat.animate(splash_image).scaleX(1.6f).scaleY(1.6f).setListener(this@EnterActivity).setDuration(3500)
 
         musicplayer = MediaPlayer.create(this, R.raw.drum)
         musicplayer.start()

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shop.buy.BuyBody
 import com.example.shop.buy.BuyData
+import com.example.shop.getSort.GetSortData
 import com.example.shop.getSortItem.Item
 import com.example.shop.getSortItem.SortItemData
 import com.example.shop.renew.RenewData
@@ -23,6 +24,7 @@ import java.util.*
 class BuyActivity : AppCompatActivity() {
 
     private lateinit var musicplayer: MediaPlayer
+    private lateinit var apiInterface: APIInterface
     lateinit var timer: Timer
     lateinit var adapter:SortItemAdapter
     lateinit var shared :SharedPreferences
@@ -37,8 +39,8 @@ class BuyActivity : AppCompatActivity() {
     lateinit var token:String
     lateinit var buyBody: BuyBody
     var sortid:Int = 1
-    var itemList = mutableListOf<Item>()
     var water :String = "0"
+    var sortTypeList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +67,6 @@ class BuyActivity : AppCompatActivity() {
             textUserScore2.text = "(" + "0" + ")"
         } else { textUserScore2.text = "("+ userScore2 + ")" }
 
-
         when (userLevel){
             "1" -> imageViewHome.setImageResource(R.drawable.m0)
             "2" -> imageViewHome.setImageResource(R.drawable.m1)
@@ -86,9 +87,32 @@ class BuyActivity : AppCompatActivity() {
         musicplayer = MediaPlayer.create(this, R.raw.miemie)
         musicplayer.start()
 
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://35.234.60.173")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        apiInterface = retrofit.create(APIInterface::class.java)
 
-        val list = listOf<String>("糧食", "軍事", "特殊")
-        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list)
+//        apiInterface.getSort().enqueue(object :retrofit2.Callback<GetSortData>{
+//            override fun onFailure(call: Call<GetSortData>, t: Throwable) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onResponse(call: Call<GetSortData>, response: Response<GetSortData>) {
+//                if (response.isSuccessful){
+//                    val sortTypeData = response.body()
+//                    sortTypeList.clear()
+//                    for (i in 0 until sortTypeData!!.AllSort.size){
+//                        sortTypeList.add(sortTypeData.AllSort[i].name)
+//                    }
+//                    val spinnerAdapter = ArrayAdapter(this@BuyActivity, android.R.layout.simple_spinner_dropdown_item, sortTypeList)
+//                    spinner.adapter = spinnerAdapter
+//                }
+//            }
+//        })
+
+        val list = listOf("糧食", "軍事", "特殊")
+        val spinnerAdapter = ArrayAdapter(this@BuyActivity, android.R.layout.simple_spinner_dropdown_item, list)
         spinner.adapter = spinnerAdapter
 
         adapter = SortItemAdapter()
@@ -98,37 +122,39 @@ class BuyActivity : AppCompatActivity() {
         spinner.setOnItemSelectedListener(object :AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long ) {
                 sortname = spinner.selectedItem.toString()
-                if (sortname == "糧食"){
+                if (sortname == list[0]){
                     sortid = 1
                 }
-                else if (sortname == "軍事"){
+                else if (sortname == list[1]){
                     sortid = 2
                 }
-                else if (sortname == "特殊"){
+                else if (sortname == list[2]){
                     sortid = 3
                 }
 
-                val retrofit = Retrofit.Builder()
-                    .baseUrl("http://35.234.60.173")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                val apiInterface = retrofit.create(APIInterface::class.java)
-                val call = apiInterface.getSortItem(sortid)
-
-                call.enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
+                apiInterface.getSortItem(
+                    sortid
+                ).enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
                     override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
                         if (response.code() == 200){
-                            val data = response.body()
-                            itemList.clear()
-                            for (i in 0 until data!!.size){
-                                itemList.add(i, Item(data[i].id, sortname, data[i].item_name, data[i].price, data[i].stock?:0, data[i].pic))
-                            }
+//                            var sortTypeMap = mapOf<>(1 to "糧食", 2 to "軍事", 3 to "特殊", 4 to "隱藏")
+                            val itemList = response.body()!!
+                                .map {
+                                    Item(
+                                        it.id,
+                                        sortname,
+                                        it.item_name,
+                                        it.price,
+                                        it.stock,
+                                        it.pic
+                                    )
+                                }
+                                .sortedBy { it.id }
                             adapter.update(itemList)
-
                         }
                     }
                 })
@@ -139,12 +165,6 @@ class BuyActivity : AppCompatActivity() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-
-
-
-
-
-
 
         adapter.setclickedListener(object :SortItemAdapter.clickedListener{
             override fun modifyItemData(id: Int, item_name: String, sort_id: Int, sort_name: String, price: Int, stock: Int, pic: String) {
@@ -181,13 +201,10 @@ class BuyActivity : AppCompatActivity() {
                         }
                         else{
                             buyBody = BuyBody(userAccount, id, editCount.text.toString().toInt())
-                            val retrofit2 = Retrofit.Builder()
-                                .baseUrl("http://35.234.60.173")
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build()
-                            val apiInterface2 = retrofit2.create(APIInterface::class.java)
-                            val call2 = apiInterface2.buy(token, buyBody)
-                            call2.enqueue(object :retrofit2.Callback<BuyData>{
+                            apiInterface.buy(
+                                token,
+                                buyBody
+                            ).enqueue(object :retrofit2.Callback<BuyData>{
                                 override fun onFailure(call: Call<BuyData>, t: Throwable) {
                                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                                 }
@@ -211,13 +228,10 @@ class BuyActivity : AppCompatActivity() {
                                                 Toast.makeText(this@BuyActivity, data.data.achevement, Toast.LENGTH_LONG).show()
                                                 water = "1"
                                                 buyBody = BuyBody(userAccount, 87, 1)
-                                                val retrofit87 = Retrofit.Builder()
-                                                    .baseUrl("http://35.234.60.173")
-                                                    .addConverterFactory(GsonConverterFactory.create())
-                                                    .build()
-                                                val apiInterface87 = retrofit87.create(APIInterface::class.java)
-                                                val call87 = apiInterface87.buy(token, buyBody)
-                                                call87.enqueue(object :retrofit2.Callback<BuyData>{
+                                                apiInterface.buy(
+                                                    token,
+                                                    buyBody
+                                                ).enqueue(object :retrofit2.Callback<BuyData>{
                                                     override fun onFailure(call: Call<BuyData>, t: Throwable) {
                                                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                                                     }
@@ -229,30 +243,28 @@ class BuyActivity : AppCompatActivity() {
                                                     }
                                                 })
                                             }
-                                            else{
-
-                                            }
                                         }
-
-                                        val retrofit3 = Retrofit.Builder()
-                                            .baseUrl("http://35.234.60.173")
-                                            .addConverterFactory(GsonConverterFactory.create())
-                                            .build()
-                                        val apiInterface3 = retrofit3.create(APIInterface::class.java)
-                                        val call3 = apiInterface3.getSortItem(sortid)
-                                        call3.enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
+                                            apiInterface.getSortItem(
+                                                sortid
+                                            ).enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
                                             override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
                                                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                                             }
                                             override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
                                                 if (response.code() == 200){
-                                                    val data = response.body()
-                                                    itemList.clear()
-                                                    for (i in 0 until data!!.size){
-                                                        itemList.add(i, Item(data[i].id, sortname, data[i].item_name, data[i].price, data[i].stock?:0, data[i].pic))
-                                                    }
+                                                    val itemList = response.body()!!
+                                                        .map {
+                                                            Item(
+                                                                it.id,
+                                                                sortname,
+                                                                it.item_name,
+                                                                it.price,
+                                                                it.stock,
+                                                                it.pic
+                                                            )
+                                                        }
+                                                        .sortedBy { it.id }
                                                     adapter.update(itemList)
-
                                                 }
                                             }
                                         })
@@ -267,25 +279,16 @@ class BuyActivity : AppCompatActivity() {
                     btnCancel.setOnClickListener {
                         builder.dismiss()
                     }
-
-
                 }
-
-
-
             }
         })
 
         timer = Timer(true)
         val timerTask: TimerTask = object : TimerTask() {
             override fun run() {
-                val retrofit = Retrofit.Builder()
-                    .baseUrl("http://35.234.60.173")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                val apiInterface = retrofit.create(APIInterface::class.java)
-                val call = apiInterface.renew(token)
-                call.enqueue(object :retrofit2.Callback<RenewData>{
+                    apiInterface.renew(
+                        token
+                    ).enqueue(object :retrofit2.Callback<RenewData>{
                     override fun onFailure(call: Call<RenewData>, t: Throwable) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }

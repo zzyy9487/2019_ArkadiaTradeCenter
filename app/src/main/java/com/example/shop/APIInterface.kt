@@ -2,6 +2,7 @@ package com.example.shop
 
 import com.example.shop.buy.BuyBody
 import com.example.shop.buy.BuyData
+import com.example.shop.getSort.GetSortData
 import com.example.shop.getSortItem.SortItem
 import com.example.shop.getSortItem.SortItemData
 import com.example.shop.login.LoginBody
@@ -49,5 +50,11 @@ interface APIInterface {
     fun renew(
         @Header("Authorization") token:String
     ):Call<RenewData>
+
+    @Headers("Content-Type: application/json")
+    @GET("/api/sorts")
+    fun getSort(
+
+    ):Call<GetSortData>
 
 }

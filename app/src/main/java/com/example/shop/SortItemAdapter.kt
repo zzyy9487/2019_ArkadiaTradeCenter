@@ -15,7 +15,7 @@ class SortItemAdapter:RecyclerView.Adapter<SortItemAdapter.ViewHolder>() {
     val list = listOf<String>("糧食", "軍事", "特殊")
     var sortid :Int = 0
 
-    private var inputList = mutableListOf<Item>()
+    private var inputList = listOf<Item>()
     private var itemClickListener: clickedListener? = null
 
     interface clickedListener{
@@ -98,7 +98,7 @@ class SortItemAdapter:RecyclerView.Adapter<SortItemAdapter.ViewHolder>() {
     }
 
 
-    fun update(newList: MutableList<Item>){
+    fun update(newList: List<Item>){
         inputList = newList
         notifyDataSetChanged()
     }

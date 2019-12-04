@@ -15,16 +15,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RecordActivity : AppCompatActivity() {
 
+    private lateinit var apiInterface: APIInterface
     lateinit var adapter:RecordAdapter
     lateinit var shared :SharedPreferences
     lateinit var token:String
     var list = mutableListOf<RecordCell>()
-    val array = listOf<String>("糧食", "軍事", "特殊", "Bonus")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record)
-
         shared = SharedPreferences(this)
 
         val userid = shared.preference.getString("id", "")
@@ -40,7 +39,7 @@ class RecordActivity : AppCompatActivity() {
             .baseUrl("http://35.234.60.173")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        val apiInterface = retrofit.create(APIInterface::class.java)
+        apiInterface = retrofit.create(APIInterface::class.java)
         val call = apiInterface.record(token, userid!!.toInt())
         call.enqueue(object :retrofit2.Callback<RecordData>{
             override fun onFailure(call: Call<RecordData>, t: Throwable) {
@@ -49,24 +48,25 @@ class RecordActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<RecordData>, response: Response<RecordData>) {
                 if (response.code() == 200){
-                    val data = response.body()
+                    val sortTypeMap = mapOf(1 to "糧食", 2 to "軍事", 3 to "特殊", 4 to "隱藏組合")
                     list.clear()
-                    for (i in 0 until data!!.SheepAllBuy.size){
-                        list.add(i, RecordCell(data!!.SheepAllBuy[i].id, array[data!!.SheepAllBuy[i].sort_id-1], data!!.SheepAllBuy[i].item_name, data!!.SheepAllBuy[i].price, data!!.SheepAllBuy[i].stock, data!!.SheepAllBuy[i].pic) )
-                    }
+                    val list = response.body()!!.SheepAllBuy
+                        .map {
+                            RecordCell(
+                                it.id,
+                                it.sort_id,
+                                it.sort_id.let { sortTypeMap.getOrDefault(it, "UnKnown") },
+                                it.item_name,
+                                it.price,
+                                it.stock,
+                                it.pic
+                            )
+                        }
+                        .sortedBy { it.sort_id }
                     adapter.update(list)
-
                 }
-
             }
-
         })
-
-
-
-
-
-
     }
 
     override fun onBackPressed() {

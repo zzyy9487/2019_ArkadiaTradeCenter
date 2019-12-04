@@ -11,16 +11,7 @@ import kotlinx.android.synthetic.main.cell_layout.view.*
 
 class RecordAdapter:RecyclerView.Adapter<RecordAdapter.ViewHolder>() {
 
-    private var inputList = mutableListOf<RecordCell>()
-//    private var itemClickListener: clickedListener? = null
-//
-//    interface clickedListener{
-//        fun modifyItemData(id:Int, item_name:String, sort_id:Int, sort_name:String, price:Int, stock:Int ,pic:String)
-//    }
-//
-//    fun setclickedListener(checkedListener: clickedListener){
-//        this.itemClickListener = checkedListener
-//    }
+    private var inputList = listOf<RecordCell>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -61,7 +52,7 @@ class RecordAdapter:RecyclerView.Adapter<RecordAdapter.ViewHolder>() {
     }
 
 
-    fun update(newList: MutableList<RecordCell>){
+    fun update(newList: List<RecordCell>){
         inputList = newList
         notifyDataSetChanged()
     }
