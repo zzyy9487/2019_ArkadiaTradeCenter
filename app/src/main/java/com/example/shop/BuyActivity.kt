@@ -1,32 +1,52 @@
 package com.example.shop
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.text.Layout
+import android.util.DisplayMetrics
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shop.buy.BuyBody
 import com.example.shop.buy.BuyData
-import com.example.shop.getSort.GetSortData
+import com.example.shop.fragment.BuyFragment
+import com.example.shop.fragment.ChatFragment
+import com.example.shop.fragment.GameFragment
+import com.example.shop.fragment.HistoryFragment
+import com.example.shop.getMsg.MsgAdapter
+import com.example.shop.getMsg.MsgData
+import com.example.shop.getMsg.Sheepallmsg
 import com.example.shop.getSortItem.Item
+import com.example.shop.getSortItem.SortItemAdapter
 import com.example.shop.getSortItem.SortItemData
 import com.example.shop.renew.RenewData
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_buy.*
+import kotlinx.android.synthetic.main.activity_buy.spinner
+import kotlinx.android.synthetic.main.alert_layout_logout.*
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.IndexOutOfBoundsException
+import java.sql.Time
 import java.util.*
+import java.util.zip.Inflater
 
 class BuyActivity : AppCompatActivity() {
 
-    private lateinit var musicplayer: MediaPlayer
+    lateinit var musicplayer: MediaPlayer
     private lateinit var apiInterface: APIInterface
     lateinit var timer: Timer
-    lateinit var adapter:SortItemAdapter
+    lateinit var timerMsg:Timer
+    lateinit var timerEnd:Timer
+    lateinit var adapter: SortItemAdapter
     lateinit var shared :SharedPreferences
     lateinit var userName:String
     lateinit var userBalance:String
@@ -34,23 +54,34 @@ class BuyActivity : AppCompatActivity() {
     lateinit var userLevel:String
     lateinit var userScore:String
     lateinit var userScore2:String
+    lateinit var type :String
     var userScoreTotal:Int = 0
     lateinit var sortname:String
     lateinit var token:String
     lateinit var buyBody: BuyBody
+    lateinit var userid:String
     var sortid:Int = 1
-    var water :String = "0"
-    var sortTypeList = mutableListOf<String>()
+//    var water :String = "0"
+    val manager = this.supportFragmentManager
+    var fragmentBuy = BuyFragment()
+    var fragmentChat = ChatFragment()
+    var fragmentGame = GameFragment()
+    var fragmentHistory = HistoryFragment()
+    var msgKeepList = mutableListOf<Sheepallmsg>()
+    lateinit var context: Context
+    var timercount:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_buy)
 
         shared = SharedPreferences(this)
+        userid = shared.preference.getString("id", "")?:""
         userName = shared.preference.getString("loginName", "")?:""
         userBalance = shared.preference.getString("balancce", "")?:""
         userAccount = shared.preference.getString("account", "")?:""
         userLevel = shared.preference.getString("level", "")?:""
+        type = shared.preference.getString("type", "")?:""
         userScore = shared.preference.getString("score", "")?:""
         userScore2 = shared.preference.getString("score2", "")?:""
         userScoreTotal = userScore.toInt() + userScore2.toInt()
@@ -61,19 +92,14 @@ class BuyActivity : AppCompatActivity() {
 
         textUserName.text = userName
         textUserBalance.text = userBalance
-        textUserLv.text = userLevel
+        textUserLv.text = "Lv. " +userLevel
         textUserScore.text = userScore
         if (userLevel=="5"){
             textUserScore2.text = "(" + "0" + ")"
         } else { textUserScore2.text = "("+ userScore2 + ")" }
 
-        when (userLevel){
-            "1" -> imageViewHome.setImageResource(R.drawable.m0)
-            "2" -> imageViewHome.setImageResource(R.drawable.m1)
-            "3" -> imageViewHome.setImageResource(R.drawable.m2)
-            "4" -> imageViewHome.setImageResource(R.drawable.m3)
-            "5" -> imageViewHome.setImageResource(R.drawable.m4)
-        }
+        setPhoto()
+
 
         if (userLevel == "5"){
             proBar.max = userScore.toInt()
@@ -86,6 +112,9 @@ class BuyActivity : AppCompatActivity() {
 
         musicplayer = MediaPlayer.create(this, R.raw.miemie)
         musicplayer.start()
+
+        bottomNavigation.selectedItemId = R.id.buy
+        bottomNavigation.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("http://35.234.60.173")
@@ -115,10 +144,6 @@ class BuyActivity : AppCompatActivity() {
         val spinnerAdapter = ArrayAdapter(this@BuyActivity, android.R.layout.simple_spinner_dropdown_item, list)
         spinner.adapter = spinnerAdapter
 
-        adapter = SortItemAdapter()
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-
         spinner.setOnItemSelectedListener(object :AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long ) {
                 sortname = spinner.selectedItem.toString()
@@ -141,7 +166,6 @@ class BuyActivity : AppCompatActivity() {
 
                     override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
                         if (response.code() == 200){
-//                            var sortTypeMap = mapOf<>(1 to "糧食", 2 to "軍事", 3 to "特殊", 4 to "隱藏")
                             val itemList = response.body()!!
                                 .map {
                                     Item(
@@ -166,10 +190,15 @@ class BuyActivity : AppCompatActivity() {
             }
         })
 
-        adapter.setclickedListener(object :SortItemAdapter.clickedListener{
+        adapter = SortItemAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+
+        adapter.setclickedListener(object :
+            SortItemAdapter.clickedListener{
             override fun modifyItemData(id: Int, item_name: String, sort_id: Int, sort_name: String, price: Int, stock: Int, pic: String) {
                 if (userLevel.toInt() < 3 && sortid == 3  ){
-                    Toast.makeText(this@BuyActivity, "想買齁！快買東西升到等級3吧！~", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@BuyActivity, "想買齁！請洽管理者 ~ ~ ~", Toast.LENGTH_SHORT).show()
                 }
                 else{
                     val inflater = this@BuyActivity.layoutInflater
@@ -220,30 +249,14 @@ class BuyActivity : AppCompatActivity() {
                                         textUserBalance.text = userBalance
                                         textUserScore.text = userScore
                                         musicplayer.start()
-
-                                        if(data.data.achevement.isNullOrEmpty()){
+                                        if (!data.data.achevement.isNullOrEmpty()){
+                                            val toast = Toast(this@BuyActivity)
+                                            toast.setGravity(Gravity.TOP, 0, 50)
+                                            toast.duration = Toast.LENGTH_SHORT
+                                            toast.view = View.inflate(this@BuyActivity, R.layout.toast_layout,null)
+                                            toast.show()
                                         }
-                                        else{
-                                            if (water == "0"){
-                                                Toast.makeText(this@BuyActivity, data.data.achevement, Toast.LENGTH_LONG).show()
-                                                water = "1"
-                                                buyBody = BuyBody(userAccount, 87, 1)
-                                                apiInterface.buy(
-                                                    token,
-                                                    buyBody
-                                                ).enqueue(object :retrofit2.Callback<BuyData>{
-                                                    override fun onFailure(call: Call<BuyData>, t: Throwable) {
-                                                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                                    }
 
-                                                    override fun onResponse(call: Call<BuyData>, response: Response<BuyData>) {
-                                                        if (response.isSuccessful){
-//                                                            Toast.makeText(this@BuyActivity, "恭喜", Toast.LENGTH_LONG).show()
-                                                        }
-                                                    }
-                                                })
-                                            }
-                                        }
                                             apiInterface.getSortItem(
                                                 sortid
                                             ).enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
@@ -301,52 +314,70 @@ class BuyActivity : AppCompatActivity() {
                             userScoreTotal = userScore.toInt() + userScore2.toInt()
 
                             this@BuyActivity.runOnUiThread{
-                                textUserLv.text = userLevel
+                                textUserLv.text = "Lv. " + userLevel
                                 textUserScore.text = userScore
                                 if (userLevel=="5"){
                                     textUserScore2.text = "(" + "0" + ")"
                                 } else { textUserScore2.text = "("+ userScore2 + ")" }
-                                when (userLevel){
-                                    "1" -> imageViewHome.setImageResource(R.drawable.m0)
-                                    "2" -> imageViewHome.setImageResource(R.drawable.m1)
-                                    "3" -> imageViewHome.setImageResource(R.drawable.m2)
-                                    "4" -> imageViewHome.setImageResource(R.drawable.m3)
-                                    "5" -> imageViewHome.setImageResource(R.drawable.m4)
-                                }
 
                                 if (userLevel == "5"){
                                     proBar.max = userScore.toInt()
                                     proBar.setProgress(userScore.toInt(), true)
                                 }
                                 else{
-                                    var usertotall = userScore.toInt() + userScore2.toInt()
+                                    val usertotall = userScore.toInt() + userScore2.toInt()
                                     proBar.max = usertotall
                                     proBar.setProgress(userScore.toInt(), true)
                                 }
+                                setPhoto()
                             }
                         }
                     }
                 })
             }
         }
-        timer.schedule(timerTask, 3000, 3000)
+        timer.schedule(timerTask, 2500, 2500)
 
+    }
 
-
-
-
-
-
-
-
-        btnLogout.setOnClickListener {
-            this.finish()
+    private fun setPhoto() {
+        when (type) {
+            "fire" -> {
+                when (userLevel) {
+                    "0" -> imageViewHome.setImageResource(R.drawable.fire)
+                    "1" -> imageViewHome.setImageResource(R.drawable.fire01)
+                    "2" -> imageViewHome.setImageResource(R.drawable.fire02)
+                    "3" -> imageViewHome.setImageResource(R.drawable.fire03)
+                    "4" -> imageViewHome.setImageResource(R.drawable.fire04)
+                    "5" -> imageViewHome.setImageResource(R.drawable.fire04)
+                }
+            }
+            "water" -> {
+                when (userLevel) {
+                    "0" -> imageViewHome.setImageResource(R.drawable.water)
+                    "1" -> imageViewHome.setImageResource(R.drawable.water01)
+                    "2" -> imageViewHome.setImageResource(R.drawable.water02)
+                    "3" -> imageViewHome.setImageResource(R.drawable.water03)
+                    "4" -> imageViewHome.setImageResource(R.drawable.water04)
+                    "5" -> imageViewHome.setImageResource(R.drawable.water04)
+                }
+            }
+            "grass" -> {
+                when (userLevel) {
+                    "0" -> imageViewHome.setImageResource(R.drawable.grass)
+                    "1" -> imageViewHome.setImageResource(R.drawable.grass01)
+                    "2" -> imageViewHome.setImageResource(R.drawable.grass02)
+                    "3" -> imageViewHome.setImageResource(R.drawable.grass03)
+                    "4" -> imageViewHome.setImageResource(R.drawable.grass04)
+                    "5" -> imageViewHome.setImageResource(R.drawable.grass04)
+                }
+            }
         }
 
-        btnRecord.setOnClickListener {
-            val intent = Intent(this@BuyActivity, RecordActivity::class.java)
-            startActivity(intent)
+        if (userLevel=="0"){
+            imageViewHome.scaleType = ImageView.ScaleType.CENTER
         }
+        else imageViewHome.scaleType = ImageView.ScaleType.FIT_CENTER
     }
 
     override fun onDestroy() {
@@ -358,4 +389,152 @@ class BuyActivity : AppCompatActivity() {
         super.onBackPressed()
         this.finish()
     }
+
+    val OnNavigationItemSelectedListener = object : BottomNavigationView.OnNavigationItemSelectedListener {
+        override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+            when (menuItem.itemId) {
+                R.id.buy -> {
+                    val transaction = manager.beginTransaction()
+                    transaction.replace(R.id.framelayout, fragmentBuy).commit()
+                    pageBuy.visibility = View.VISIBLE
+                    return true
+                }
+
+                R.id.chat -> {
+                    val transaction = manager.beginTransaction()
+                    transaction.replace(R.id.framelayout, fragmentChat).commit()
+                    pageBuy.visibility = View.GONE
+                    bottomNavigation.removeBadge(R.id.chat)
+
+                    if (timercount==0){
+                        timerMsg = Timer(true)
+                        val msgTimerTask :TimerTask = object :TimerTask(){
+                            override fun run() {
+                                apiInterface.getMsg(token).enqueue(object : Callback<MsgData> {
+                                    override fun onFailure(call: Call<MsgData>, t: Throwable) {
+                                        Toast.makeText(this@BuyActivity, "getMsg_OnFailure", Toast.LENGTH_LONG).show()
+                                    }
+                                    override fun onResponse(call: Call<MsgData>, response: Response<MsgData>) {
+                                        if (response.isSuccessful) {
+                                            var type2 = 0
+                                            val msgRepeatList = response.body()!!.sheepallmsg
+                                                .map {
+                                                    Sheepallmsg(
+                                                        it.id,
+                                                        it.sheep_id,
+                                                        it.sheep_msg,
+                                                        it.wolf_id,
+                                                        it.wolf_msg,
+                                                        it.created_at,
+                                                        it.updated_at
+                                                    )
+                                                }.sortedBy { it.id }
+                                                .reversed()
+                                            if (type == "fire"){
+                                                type2 = R.drawable.fireicon
+                                            } else if (type == "water"){
+                                                type2 = R.drawable.watericon
+                                            } else if (type == "grass"){
+                                                type2 = R.drawable.grassicon
+                                            }
+                                            if (msgKeepList.isEmpty()){
+                                                msgKeepList.addAll(msgRepeatList)
+                                                fragmentChat.adapter.update(msgKeepList, type2, userName)
+
+                                            } else if (msgKeepList != msgRepeatList){
+                                                msgKeepList.clear()
+                                                msgKeepList.addAll(msgRepeatList)
+                                                fragmentChat.adapter.update(msgKeepList, type2, userName)
+                                                if (bottomNavigation.selectedItemId !== R.id.chat){
+                                                    val bottomnavigation:BottomNavigationView=findViewById(R.id.bottomNavigation)
+                                                    val badgeDrawable = bottomnavigation.getOrCreateBadge(R.id.chat)
+                                                    badgeDrawable.setContentDescriptionNumberless("!")
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                        timerMsg.schedule(msgTimerTask, 3000, 3000)
+                        timercount = 1
+                    }
+
+                    return true
+                }
+
+                R.id.game -> {
+                    val transaction = manager.beginTransaction()
+                    transaction.replace(R.id.framelayout, fragmentGame).commit()
+                    pageBuy.visibility = View.GONE
+                    val intent = Intent(this@BuyActivity, WaitActivity::class.java)
+                    startActivity(intent)
+                    return false
+                }
+
+                R.id.history -> {
+                    val transaction = manager.beginTransaction()
+                    transaction.replace(R.id.framelayout, fragmentHistory).commit()
+                    pageBuy.visibility = View.GONE
+                    return true
+                }
+
+                R.id.logout -> {
+                    val dm = DisplayMetrics()
+                    this@BuyActivity.windowManager.defaultDisplay.getMetrics(dm)
+                    val pixelX = dm.widthPixels
+                    val pixelY = dm.heightPixels
+                    val logoutInflater = this@BuyActivity.layoutInflater
+                    val view = logoutInflater.inflate(R.layout.alert_layout_logout, null)
+                    val builder = AlertDialog.Builder(this@BuyActivity, R.style.AlearTheme).setView(view).show()
+                    val endTitle = view.findViewById<TextView>(R.id.textViewEndTitle)
+                    val endLayout = view.findViewById<ConstraintLayout>(R.id.endLayout)
+                    val hitme = view.findViewById<TextView>(R.id.logout)
+                    endLayout.layoutParams.width = pixelX
+                    endLayout.layoutParams.height = pixelY
+                    timerEnd = Timer(true)
+                    val endTimerTask :TimerTask = object :TimerTask(){
+                        val time = System.currentTimeMillis()
+                        val time10 = time + 5000
+                        val time15 = time + 10000
+                        val time20 = time + 15000
+                        override fun run() {
+                            hitme.setX((0..pixelX).random().toFloat())
+                            hitme.setY((0..pixelY).random().toFloat())
+                            runOnUiThread{
+                                if (System.currentTimeMillis() > time20){
+                                    hitme.text = "m_(._.)_m"
+                                    timerEnd.cancel()
+                                    hitme.setX(pixelX/2.toFloat())
+                                    hitme.setY(pixelY/2.toFloat())
+                                    endTitle.visibility = View.GONE
+                                }else if(System.currentTimeMillis() > time15){
+                                    hitme.text = "過10秒了..."
+                                }else if(System.currentTimeMillis() > time10){
+                                    hitme.text = "加油好嘛！！！"
+                                }
+                            }
+                        }
+                    }
+                    timerEnd.schedule(endTimerTask, 500, 500)
+
+                    hitme.setOnClickListener {
+                        this@BuyActivity.finish()
+                        builder.dismiss()
+                    }
+                }
+            }
+            return false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        userBalance = shared.preference.getString("balancce", "")?:""
+        textUserBalance.text = userBalance
+        bottomNavigation.selectedItemId = R.id.buy
+    }
+
 }
