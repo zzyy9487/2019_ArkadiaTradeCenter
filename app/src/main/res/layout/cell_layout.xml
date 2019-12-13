@@ -5,27 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp"
-    android:background="@color/color4">
+    android:background="@drawable/cellbk">
 
     <ImageView
         android:id="@+id/imagePic"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/textname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:text="名稱："
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@id/imagePic"
-        app:layout_constraintTop_toTopOf="@id/imagePic" />
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textName"
@@ -36,7 +44,7 @@
         android:textColor="@android:color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@id/textname"
-        app:layout_constraintTop_toTopOf="@id/imagePic" />
+        app:layout_constraintTop_toTopOf="@id/textname" />
 
     <TextView
         android:id="@+id/textprice"
@@ -47,7 +55,7 @@
         android:text="價格："
         android:textSize="20sp"
         android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@id/imagePic"
+        app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/textName" />
 
     <TextView
@@ -71,7 +79,7 @@
         android:text="類別："
         android:textSize="20sp"
         android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@id/imagePic"
+        app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/textPrice" />
 
     <TextView
@@ -95,7 +103,7 @@
         android:text="庫存："
         android:textSize="20sp"
         android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@id/imagePic"
+        app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/textsort" />
 
     <TextView

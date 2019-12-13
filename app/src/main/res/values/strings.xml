@@ -1,19 +1,20 @@
 <resources>
-    <string name="app_name">Shop</string>
-    <string name="resname">暱稱</string>
+    <string name="app_name">Arkadia Trade Center</string>
+    <string name="resname">N I C K N A M E</string>
     <string name="resnamehint">請在此填入暱稱</string>
-    <string name="resaccount">帳號</string>
+    <string name="resaccount">A C C O U N T</string>
     <string name="resaccounthint">請在此填入帳號</string>
-    <string name="respassword">密碼</string>
+    <string name="respassword">P A S S W O R D</string>
     <string name="respasshint">請在此填入密碼</string>
-    <string name="resgo">確定註冊</string>
-    <string name="backres">返回註冊</string>
-    <string name="login">登入頁面</string>
-    <string name="logaccount">帳號：</string>
+    <string name="type">T Y P E</string>
+    <string name="resgo">Sign Up</string>
+    <string name="backres">Sign Up</string>
+    <string name="login">Sign In</string>
+    <string name="logaccount">ACCOUNT</string>
     <string name="lognamehint">填入帳號</string>
-    <string name="logpassword">密碼：</string>
+    <string name="logpassword">PASSWORD</string>
     <string name="logpasshint">填入密碼</string>
-    <string name="logingo">登入</string>
+    <string name="logingo">Sign In</string>
     <string name="storename">放羊的孩子｜A Sheep Child</string>
 
 </resources>

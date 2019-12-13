@@ -1,6 +1,7 @@
 package com.example.shop
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,10 +17,12 @@ class EnterActivity : AppCompatActivity(), ViewPropertyAnimatorListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter)
-
-        ViewCompat.animate(arkadia).scaleX(0.8f).scaleY(0.8f).setListener(this@EnterActivity).setDuration(3500)
-
-        ViewCompat.animate(splash_image).scaleX(1.6f).scaleY(1.6f).setListener(this@EnterActivity).setDuration(3500)
+        val font = Typeface.createFromAsset(assets, "fonts/Centaur.ttf")
+        textViewARKADIA.setTypeface(font)
+        textViewTradCenter.setTypeface(font)
+        ViewCompat.animate(textViewARKADIA).scaleX(1.2f).scaleY(1.2f).setListener(this@EnterActivity).setDuration(3000)
+        ViewCompat.animate(splash_image).scaleX(1.2f).scaleY(1.2f).setListener(this@EnterActivity).setDuration(3000)
+        ViewCompat.animate(textViewTradCenter).scaleX(1.3f).scaleY(1.3f).setListener(this@EnterActivity).setDuration(3000)
 
         musicplayer = MediaPlayer.create(this, R.raw.drum)
         musicplayer.start()

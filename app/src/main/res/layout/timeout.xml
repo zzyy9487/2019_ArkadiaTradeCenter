@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    tools:context=".LoadingActivity">
+
+    <TextView
+        android:id="@+id/textTimeOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Timeout"
+        android:textColor="@android:color/background_dark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/competitor_imageView"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTimeOut"
+        app:srcCompat="@drawable/dragon" />
+
+    <TextView
+        android:id="@+id/competitor_totalscore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/competitor_imageView" />
+
+    <ImageView
+        android:id="@+id/my_imageView"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/competitor_totalscore"
+        app:srcCompat="@drawable/frog" />
+
+    <TextView
+        android:id="@+id/my_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_imageView" />
+
+    <ImageView
+        android:id="@+id/competitror_crown"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="70dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/competitor_imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/competitor_imageView"
+        app:srcCompat="@drawable/crown" />
+
+    <ImageView
+        android:id="@+id/my_crown"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="70dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/my_imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/my_imageView"
+        app:srcCompat="@drawable/crown" />
+
+    <Button
+        android:id="@+id/return_page"
+        android:layout_width="67dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:background="#BCFFBB33"
+        android:text="Back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_score" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

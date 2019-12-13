@@ -1,4 +1,4 @@
-package com.example.shop
+package com.example.shop.record
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,12 +6,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.example.shop.record.RecordCell
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.shop.R
 import kotlinx.android.synthetic.main.cell_layout.view.*
 
 class RecordAdapter:RecyclerView.Adapter<RecordAdapter.ViewHolder>() {
 
     private var inputList = listOf<RecordCell>()
+    private var itemClickListener: clickedListener? = null
+
+    interface clickedListener{
+        fun worldEnd()
+    }
+
+    fun setclickedListener(checkedListener: clickedListener){
+        this.itemClickListener = checkedListener
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -42,15 +53,19 @@ class RecordAdapter:RecyclerView.Adapter<RecordAdapter.ViewHolder>() {
         fun bindViewHolder(recordCell: RecordCell){
 
             Glide.with(itemView).load(recordCell.pic)
-                .transform(CircleCrop())
+                .transform(RoundedCorners(5))
                 .into(pic)
             name.text = recordCell.item_name
             price.text = recordCell.price.toString()
             stock.text = recordCell.stock.toString()
             sort.text = recordCell.sort_name
+            if (name.text == "深水炸彈"){
+                itemView.setOnClickListener {
+                    itemClickListener?.worldEnd()
+                }
+            }
         }
     }
-
 
     fun update(newList: List<RecordCell>){
         inputList = newList

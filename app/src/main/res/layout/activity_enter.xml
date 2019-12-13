@@ -4,28 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color4">
+    android:background="@color/color12">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.33"/>
+
+    <TextView
+        android:id="@+id/textViewARKADIA"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="ARKADIA"
+        android:textSize="70sp"
+        android:textStyle="bold"
+        android:textColor="@color/color14"
+        android:gravity="center"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toBottomOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/splash_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@id/textViewTradCenter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/arkadia" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/arkadia"/>
 
-    <TextView
-        android:id="@+id/arkadia"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Arkadia"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="90sp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.93"/>
+
+    <TextView
+        android:id="@+id/textViewTradCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trade Center"
+        android:textColor="@color/color14"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/splash_image"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="@id/guideline1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,91 +7,49 @@
     android:background="@color/color4"
     tools:context=".BuyActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07"/>
+
     <ImageView
         android:id="@+id/imageViewHome"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:scaleType="fitCenter"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        app:srcCompat="@drawable/m0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/wolf"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/proBar"/>
 
-    <TextView
-        android:id="@+id/textusername"
-        android:layout_width="wrap_content"
+    <ProgressBar
+        android:id="@+id/proBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:text="Name："
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/imageViewHome"
-        app:layout_constraintTop_toTopOf="@+id/imageViewHome"/>
-
-    <TextView
-        android:id="@+id/textUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="大肥羊！"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/textusername"
-        app:layout_constraintTop_toTopOf="@+id/textusername"/>
-
-    <TextView
-        android:id="@+id/textuserbalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Cash："
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/textusername"
-        app:layout_constraintTop_toBottomOf="@+id/textusername" />
-
-    <TextView
-        android:id="@+id/textUserBalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$$$$"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/textuserbalance"
-        app:layout_constraintTop_toTopOf="@+id/textuserbalance"/>
-
-    <TextView
-        android:id="@+id/textuserlv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Level："
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/textuserbalance"
-        app:layout_constraintTop_toBottomOf="@+id/textuserbalance" />
-
-    <TextView
-        android:id="@+id/textUserLv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="？"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/textuserlv"
-        app:layout_constraintTop_toTopOf="@+id/textuserlv"/>
+        android:background="@color/color6"
+        android:layout_marginTop="2dp"
+        android:progressTint="@color/color7"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewHome"
+        app:layout_constraintStart_toStartOf="@+id/imageViewHome"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewHome"
+        app:layout_constraintBottom_toTopOf="@id/framelayout"/>
 
     <TextView
         android:id="@+id/textuserscore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:text="Score："
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/textuserlv"
-        app:layout_constraintTop_toBottomOf="@+id/textuserlv" />
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/proBar"
+        app:layout_constraintEnd_toStartOf="@+id/textUserScore"
+        app:layout_constraintTop_toTopOf="@+id/proBar"
+        app:layout_constraintBottom_toBottomOf="@+id/proBar"
+        app:layout_constraintHorizontal_chainStyle="packed"/>
 
     <TextView
         android:id="@+id/textUserScore"
@@ -99,9 +57,11 @@
         android:layout_height="wrap_content"
         android:text="!!!!!"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/textuserscore"
-        app:layout_constraintTop_toTopOf="@+id/textuserscore"/>
+        app:layout_constraintEnd_toStartOf="@+id/textUserScore2"
+        app:layout_constraintTop_toTopOf="@+id/textuserscore"
+        app:layout_constraintBottom_toBottomOf="@+id/textuserscore"/>
 
     <TextView
         android:id="@+id/textUserScore2"
@@ -110,72 +70,176 @@
         android:text="()"
         android:textColor="@android:color/black"
         android:alpha="0.5"
-        android:textSize="20sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/textUserScore"
-        app:layout_constraintTop_toTopOf="@+id/textuserscore"/>
+        app:layout_constraintEnd_toEndOf="@+id/proBar"
+        app:layout_constraintTop_toTopOf="@+id/textuserscore"
+        app:layout_constraintBottom_toBottomOf="@+id/textuserscore"/>
 
-    <ProgressBar
-        android:id="@+id/proBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/color6"
-        android:progressTint="@color/color7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textuserscore"
-        app:layout_constraintTop_toBottomOf="@+id/textuserscore" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/white"
-        android:backgroundTint="@android:color/white"
-        android:textAlignment="gravity"
-        app:layout_constraintTop_toBottomOf="@id/imageViewHome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnRecord"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView"/>
-
-    <Button
-        android:id="@+id/btnRecord"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:gravity="center"
-        android:text="購買紀錄"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@+id/proBar"
-        app:layout_constraintStart_toEndOf="@+id/spinner"
-        app:layout_constraintEnd_toStartOf="@+id/btnLogout"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66"/>
 
-    <Button
-        android:id="@+id/btnLogout"
+    <ImageView
+        android:id="@+id/imagePeople"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@drawable/peopleicon"
+        app:layout_constraintEnd_toStartOf="@id/textUserName"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textUserName"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="登出"
+        android:layout_height="0dp"
+        android:text="大肥羊！"
         android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@+id/proBar"
-        app:layout_constraintStart_toEndOf="@+id/btnRecord"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/imagePeople"
+        app:layout_constraintBottom_toBottomOf="@id/imagePeople"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <ImageView
+        android:id="@+id/imageLevel"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="25dp"
+        app:srcCompat="@drawable/level"
+        app:layout_constraintTop_toBottomOf="@id/imagePeople"
+        app:layout_constraintEnd_toEndOf="@id/imagePeople"/>
+
+    <TextView
+        android:id="@+id/textUserLv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Lv. ？"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@+id/textUserName"
+        app:layout_constraintTop_toTopOf="@+id/imageLevel"
+        app:layout_constraintBottom_toBottomOf="@id/imageLevel"/>
+
+    <ImageView
+        android:id="@+id/imageMoney"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@drawable/moneycoin"
+        app:layout_constraintTop_toBottomOf="@id/imageLevel"
+        app:layout_constraintEnd_toStartOf="@id/textUserBalance"/>
+
+    <TextView
+        android:id="@+id/textUserBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="$$$$"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@+id/textUserLv"
+        app:layout_constraintTop_toTopOf="@+id/imageMoney"
+        app:layout_constraintBottom_toBottomOf="@id/imageMoney"/>
+
+    <FrameLayout
+        android:id="@+id/framelayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/color5"
-        app:layout_constraintTop_toBottomOf="@id/spinner"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/proBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pageBuy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/recyclerView"
+                app:tabIndicatorColor="@color/color9"
+                app:tabSelectedTextColor="@color/color9"
+                app:tabTextColor="@color/color11">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="糧食" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="軍事" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="特殊" />
+
+            </com.google.android.material.tabs.TabLayout>
+
+<!--            <Spinner-->
+<!--                android:id="@+id/spinner"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="visible"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/tabLayout"-->
+<!--                app:layout_constraintBottom_toTopOf="@id/recyclerView"/>-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="visible"
+                tools:listitem="@layout/cell_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tabLayout"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemTextColor="@drawable/bottom"
+        app:itemIconTint="@drawable/bottom"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintTop_toBottomOf="@+id/framelayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/navigation"/>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/imageGIF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:scaleType="center"
+        android:background="@android:color/black"
+        android:src="@drawable/boom123"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

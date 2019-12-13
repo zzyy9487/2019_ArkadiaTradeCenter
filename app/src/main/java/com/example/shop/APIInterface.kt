@@ -2,6 +2,9 @@ package com.example.shop
 
 import com.example.shop.buy.BuyBody
 import com.example.shop.buy.BuyData
+import com.example.shop.getMoney.GetMoneyBody
+import com.example.shop.getMoney.GetMoneyData
+import com.example.shop.getMsg.MsgData
 import com.example.shop.getSort.GetSortData
 import com.example.shop.getSortItem.SortItem
 import com.example.shop.getSortItem.SortItemData
@@ -11,13 +14,14 @@ import com.example.shop.record.RecordData
 import com.example.shop.renew.RenewData
 import com.example.shop.res.ResBody
 import com.example.shop.res.ResData
+import com.example.shop.sendMsg.SendMsgBody
+import com.example.shop.sendMsg.SendMsgData
 import retrofit2.Call
 import retrofit2.http.*
 
 interface APIInterface {
 
 //    @Headers("Content-Type: application/json","Accept: application/json")
-
 
     @POST("/api/register")
     fun res(
@@ -56,5 +60,21 @@ interface APIInterface {
     fun getSort(
 
     ):Call<GetSortData>
+
+    @GET("/api/oldsheepmsg")
+    fun getMsg(
+        @Header("Authorization") token:String
+    ):Call<MsgData>
+
+    @POST("/api/newsheepmsg")
+    fun sendMsg(
+        @Header("Authorization") token:String,
+        @Body body:SendMsgBody
+    ):Call<SendMsgData>
+
+    @POST("/api/gamemoney")
+    fun getMoney(
+        @Body body:GetMoneyBody
+    ):Call<GetMoneyData>
 
 }

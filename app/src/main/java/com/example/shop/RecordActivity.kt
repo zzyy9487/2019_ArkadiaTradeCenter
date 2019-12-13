@@ -3,8 +3,8 @@ package com.example.shop
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.shop.record.RecordAdapter
 import com.example.shop.record.RecordCell
 import com.example.shop.record.RecordData
 import kotlinx.android.synthetic.main.activity_record.*
@@ -16,8 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RecordActivity : AppCompatActivity() {
 
     private lateinit var apiInterface: APIInterface
-    lateinit var adapter:RecordAdapter
-    lateinit var shared :SharedPreferences
+    lateinit var adapter: RecordAdapter
+    lateinit var shared : SharedPreferences
     lateinit var token:String
     var list = mutableListOf<RecordCell>()
 

@@ -1,11 +1,10 @@
 package com.example.shop
 
 import android.content.Intent
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import com.example.shop.login.LoginBody
 import com.example.shop.login.LoginData
 import kotlinx.android.synthetic.main.activity_login.*
@@ -24,8 +23,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        
-
         shared = SharedPreferences(this)
 
         if(shared.preference.getString("resstatus", "").isNullOrEmpty()){
@@ -46,16 +43,16 @@ class LoginActivity : AppCompatActivity() {
             }
             else{
                 body = LoginBody(editLogaccount.text.toString(), editLogpass.text.toString())
+                btn_login.isEnabled = false
                 val retrofit = Retrofit.Builder()
                     .baseUrl("http://35.234.60.173")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 val apiInterface = retrofit.create(APIInterface::class.java)
-                val call = apiInterface.login(body)
-
-                call.enqueue(object :retrofit2.Callback<LoginData>{
+                apiInterface.login(body).enqueue(object :retrofit2.Callback<LoginData>{
                     override fun onFailure(call: Call<LoginData>, t: Throwable) {
                         Toast.makeText(this@LoginActivity, "一定漏了什麼沒填...", Toast.LENGTH_LONG).show()
+                        btn_login.isEnabled = true
                     }
 
                     override fun onResponse(call: Call<LoginData>, response: Response<LoginData>) {
@@ -72,12 +69,15 @@ class LoginActivity : AppCompatActivity() {
                             shared.setScore(data.now_sheep.score.toString())
                             shared.setId(data.now_sheep.id.toString())
                             shared.setScore2(data.last_lv.toString())
+                            shared.setType(data.now_sheep.type)
                             Toast.makeText(this@LoginActivity, data.msg, Toast.LENGTH_LONG).show()
                             val intent = Intent(this@LoginActivity, BuyActivity::class.java)
                             startActivity(intent)
+                            btn_login.isEnabled = true
                         }
                         else{
                             Toast.makeText(this@LoginActivity, "QQ...登入失敗...", Toast.LENGTH_LONG).show()
+                            btn_login.isEnabled = true
                         }
                     }
                 })
@@ -88,6 +88,15 @@ class LoginActivity : AppCompatActivity() {
         btn_res.setOnClickListener {
             this.finish()
         }
+
+        val font = Typeface.createFromAsset(assets, "fonts/Chalkduster.ttf")
+        textViewCamp.setTypeface(font)
+        textViewShop.setTypeface(font)
+        textLogaccount.setTypeface(font)
+        textLogpassword.setTypeface(font)
+        btn_login.setTypeface(font)
+        btn_res.setTypeface(font)
+
     }
 
 

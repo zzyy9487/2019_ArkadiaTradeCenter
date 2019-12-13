@@ -1,13 +1,12 @@
-package com.example.shop
+package com.example.shop.getSortItem
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.shop.getSortItem.Item
+import com.example.shop.R
 import kotlinx.android.synthetic.main.cell_layout.view.*
 
 class SortItemAdapter:RecyclerView.Adapter<SortItemAdapter.ViewHolder>() {

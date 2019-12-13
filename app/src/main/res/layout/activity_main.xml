@@ -10,80 +10,86 @@
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:srcCompat="@drawable/res"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
     <TextView
         android:id="@+id/textResname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:fontFamily="@font/aguafina_script"
         android:text="@string/resname"
         android:textColor="@android:color/black"
         android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@+id/editResname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editResname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:layout_marginBottom="5dp"
         android:inputType="textPersonName"
         android:hint="@string/resnamehint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textResname"/>
+        app:layout_constraintBottom_toTopOf="@id/textResaccount"/>
 
     <TextView
         android:id="@+id/textResaccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:fontFamily="@font/aguafina_script"
         android:text="@string/resaccount"
         android:textColor="@android:color/black"
         android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editResname"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@+id/editResaccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editResaccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:inputType="textPersonName"
         android:hint="@string/resaccounthint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textResaccount"/>
+        app:layout_constraintBottom_toBottomOf="@id/guideline"/>
 
     <TextView
         android:id="@+id/textRespassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/aguafina_script"
         android:text="@string/respassword"
         android:textColor="@android:color/black"
         android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editResaccount"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/editResaccount" />
 
     <EditText
         android:id="@+id/editRespass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:inputType="textPassword"
@@ -92,24 +98,72 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textRespassword"/>
 
+    <TextView
+        android:id="@+id/textType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/aguafina_script"
+        android:text="@string/type"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/radioFire"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@id/editRespass"
+        app:layout_constraintTop_toBottomOf="@id/editRespass" />
+
+    <RadioButton
+        android:id="@+id/radioFire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fire"
+        android:checked="true"
+        app:layout_constraintStart_toEndOf="@id/textType"
+        app:layout_constraintEnd_toStartOf="@id/radioWater"
+        app:layout_constraintTop_toTopOf="@id/textType"
+        app:layout_constraintBottom_toBottomOf="@id/textType"
+        app:layout_constraintHorizontal_weight="1"/>
+
+    <RadioButton
+        android:id="@+id/radioWater"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Water"
+        app:layout_constraintStart_toEndOf="@id/radioFire"
+        app:layout_constraintEnd_toStartOf="@id/radioGrass"
+        app:layout_constraintTop_toTopOf="@id/textType"
+        app:layout_constraintBottom_toBottomOf="@id/textType"
+        app:layout_constraintHorizontal_weight="1"/>
+
+    <RadioButton
+        android:id="@+id/radioGrass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grass"
+        app:layout_constraintStart_toEndOf="@id/radioWater"
+        app:layout_constraintEnd_toEndOf="@id/editRespass"
+        app:layout_constraintTop_toTopOf="@id/textType"
+        app:layout_constraintBottom_toBottomOf="@id/textType"
+        app:layout_constraintHorizontal_weight="1"/>
+
     <Button
         android:id="@+id/btn_res"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/resgo"
         android:backgroundTint="@android:color/white"
         app:layout_constraintStart_toStartOf="@id/editRespass"
-        app:layout_constraintTop_toBottomOf="@id/editRespass"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/btn_log"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/login"
         android:backgroundTint="@android:color/white"
         app:layout_constraintEnd_toEndOf="@id/editRespass"
-        app:layout_constraintTop_toBottomOf="@id/editRespass"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,12 @@
     <color name="color5">#454545</color>
     <color name="color6">#9A9282</color>
     <color name="color7">#F5ED09</color>
-
+    <color name="color8">#4D000000</color>
+    <color name="color9">#25a4f1</color>
+    <color name="color10">#E0E0E0</color>
+    <color name="color11">#686868</color>
+    <color name="color12">#F7F1BD</color>
+    <color name="color13">#33FFFFFF</color>
+    <color name="color14">#5B6A36</color>
 
 </resources>

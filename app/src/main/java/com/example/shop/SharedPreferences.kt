@@ -41,6 +41,10 @@ class SharedPreferences(context: Context) {
         preference.edit().putString("level", level).apply()
     }
 
+    fun setType(type:String){
+        preference.edit().putString("type", type).apply()
+    }
+
     fun setScore(score:String){
         preference.edit().putString("score", score).apply()
     }

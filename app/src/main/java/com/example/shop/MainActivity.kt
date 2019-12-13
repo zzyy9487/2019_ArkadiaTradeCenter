@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var body: ResBody
     lateinit var shared :SharedPreferences
+    var type:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,25 @@ class MainActivity : AppCompatActivity() {
         if (shared.preference.getString("resstatus", "") == "1"){
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
+        }
+
+        radioFire.setOnClickListener{
+            radioFire.isChecked = true
+            radioGrass.isChecked = false
+            radioWater.isChecked = false
+        }
+
+        radioWater.setOnClickListener{
+            radioFire.isChecked = false
+            radioWater.isChecked = true
+            radioGrass.isChecked = false
+
+        }
+
+        radioGrass.setOnClickListener{
+            radioFire.isChecked = false
+            radioWater.isChecked = false
+            radioGrass.isChecked = true
         }
 
 
@@ -50,7 +70,14 @@ class MainActivity : AppCompatActivity() {
                                 Toast.makeText(this, "密碼字數最高12位...", Toast.LENGTH_LONG).show()
                             }
                             else{
-                                body = ResBody(editResname.text.toString(), editResaccount.text.toString(), editRespass.text.toString())
+                                if (radioFire.isChecked){
+                                    type = "fire"
+                                } else if (radioWater.isChecked){
+                                    type = "water"
+                                } else type = "grass"
+                                btn_res.isEnabled = false
+
+                                body = ResBody(editResname.text.toString(), editResaccount.text.toString(), editRespass.text.toString(), type)
                                 val retrofit = Retrofit.Builder()
                                     .baseUrl("http://35.234.60.173")
                                     .addConverterFactory(GsonConverterFactory.create())
@@ -61,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                                 call.enqueue(object :retrofit2.Callback<ResData>{
                                     override fun onFailure(call: Call<ResData>, t: Throwable) {
                                         Toast.makeText(this@MainActivity, t.toString(), Toast.LENGTH_LONG).show()
+                                        btn_res.isEnabled = true
                                     }
 
                                     override fun onResponse(call: Call<ResData>, response: Response<ResData>) {
@@ -73,9 +101,11 @@ class MainActivity : AppCompatActivity() {
                                             Toast.makeText(this@MainActivity, data.msg, Toast.LENGTH_LONG).show()
                                             val intent = Intent(this@MainActivity, LoginActivity::class.java)
                                             startActivity(intent)
+                                            btn_res.isEnabled = true
                                         }
                                         else {
                                             Toast.makeText(this@MainActivity, "帳號重複哦！", Toast.LENGTH_LONG).show()
+                                            btn_res.isEnabled = true
                                         }
                                     }
                                 })
@@ -94,8 +124,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         btn_log.setOnClickListener {
+            btn_log.isEnabled = false
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
+            btn_log.isEnabled = true
         }
     }
 

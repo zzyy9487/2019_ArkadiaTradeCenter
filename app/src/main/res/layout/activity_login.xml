@@ -4,101 +4,145 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color4"
+    android:background="@drawable/loginview"
     tools:context=".LoginActivity"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:layout_marginTop="100dp"
-        app:srcCompat="@drawable/arkadia"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/texttile"
+    <Button
+        android:id="@+id/btn_res"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
-        android:text="@string/storename"
-        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/backres"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textSize="25sp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@android:color/white"
+        android:background="@color/color13"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.07"/>
+
+    <TextView
+        android:id="@+id/textViewCamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Arkadia"
+        android:textSize="60sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintEnd_toEndOf="@+id/guideline8"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"/>
+
+    <TextView
+        android:id="@+id/textViewShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trade Center"
+        android:textSize="38sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCamp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07"/>
 
     <TextView
         android:id="@+id/textLogaccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="55dp"
+        android:layout_marginStart="15dp"
         android:text="@string/logaccount"
-        android:textColor="@android:color/black"
-        android:textSize="25sp"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/texttile"/>
+        app:layout_constraintTop_toTopOf="@id/guideline5"/>
 
     <EditText
         android:id="@+id/editLogaccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
         android:inputType="textPersonName"
         android:textColor="@android:color/black"
-        android:textAlignment="textEnd"
+        android:textAlignment="textStart"
         android:textColorHint="@android:color/holo_red_dark"
         android:hint="@string/lognamehint"
-        app:layout_constraintStart_toEndOf="@+id/textLogaccount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textLogaccount"/>
+        android:background="@drawable/login"
+        app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintEnd_toEndOf="@+id/guideline8"
+        app:layout_constraintTop_toTopOf="@id/textLogaccount"
+        app:layout_constraintBottom_toBottomOf="@id/textLogaccount"/>
 
     <TextView
         android:id="@+id/textLogpassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         android:text="@string/logpassword"
-        android:textColor="@android:color/black"
-        android:textSize="25sp"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editLogaccount"/>
 
     <EditText
         android:id="@+id/editLogpass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
         android:inputType="textPassword"
-        android:textAlignment="textEnd"
+        android:textAlignment="textStart"
         android:textColor="@android:color/black"
         android:hint="@string/logpasshint"
         android:textColorHint="@android:color/holo_red_dark"
-        app:layout_constraintStart_toEndOf="@+id/textLogpassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textLogpassword"/>
+        android:background="@drawable/login"
+        app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintEnd_toEndOf="@+id/guideline8"
+        app:layout_constraintTop_toTopOf="@id/textLogpassword"
+        app:layout_constraintBottom_toBottomOf="@id/textLogpassword"/>
 
-    <Button
-        android:id="@+id/btn_res"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/backres"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toStartOf="@id/editLogpass"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85"/>
 
     <Button
         android:id="@+id/btn_login"
@@ -107,8 +151,11 @@
         android:layout_marginBottom="20dp"
         android:text="@string/logingo"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="@id/editLogpass"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@color/color13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline6"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
