@@ -169,7 +169,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/recyclerView"
+                app:layout_constraintBottom_toTopOf="@id/viewpager"
                 app:tabIndicatorColor="@color/color9"
                 app:tabSelectedTextColor="@color/color9"
                 app:tabTextColor="@color/color11">
@@ -191,26 +191,22 @@
 
             </com.google.android.material.tabs.TabLayout>
 
-<!--            <Spinner-->
-<!--                android:id="@+id/spinner"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:visibility="visible"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/tabLayout"-->
-<!--                app:layout_constraintBottom_toTopOf="@id/recyclerView"/>-->
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:visibility="visible"
-                tools:listitem="@layout/cell_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayout"/>
+                app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/recyclerView"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:visibility="visible"-->
+<!--                    tools:listitem="@layout/cell_layout" />-->
+            </androidx.viewpager.widget.ViewPager>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

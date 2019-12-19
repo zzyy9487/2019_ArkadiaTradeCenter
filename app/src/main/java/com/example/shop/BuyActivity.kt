@@ -13,6 +13,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_SETTLING
 import com.example.shop.buy.BuyBody
 import com.example.shop.buy.BuyData
 import com.example.shop.fragment.BuyFragment
@@ -42,12 +48,11 @@ import java.util.zip.Inflater
 
 class BuyActivity : AppCompatActivity() {
 
-//    lateinit var musicplayer: MediaPlayer
     private lateinit var apiInterface: APIInterface
     lateinit var timer: Timer
     lateinit var timerMsg:Timer
     lateinit var timerEnd:Timer
-    lateinit var adapter: SortItemAdapter
+    lateinit var pAdapter: pAdapter
     lateinit var shared :SharedPreferences
     lateinit var userName:String
     lateinit var userBalance:String
@@ -70,6 +75,7 @@ class BuyActivity : AppCompatActivity() {
     var msgKeepList = mutableListOf<Sheepallmsg>()
     lateinit var context: Context
     var timercount:Int = 0
+    val list = listOf("糧食", "軍事", "特殊")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +106,6 @@ class BuyActivity : AppCompatActivity() {
 
         setPhoto()
 
-
         if (userLevel == "5"){
             proBar.max = userScore.toInt()
             proBar.setProgress(userScore.toInt(), true)
@@ -109,9 +114,6 @@ class BuyActivity : AppCompatActivity() {
             proBar.max = userScoreTotal
             proBar.setProgress(userScore.toInt(), true)
         }
-
-//        musicplayer = MediaPlayer.create(this, R.raw.miemie)
-//        musicplayer.start()
 
         bottomNavigation.selectedItemId = R.id.buy
         bottomNavigation.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener)
@@ -122,137 +124,12 @@ class BuyActivity : AppCompatActivity() {
             .build()
         apiInterface = retrofit.create(APIInterface::class.java)
 
-//        apiInterface.getSort().enqueue(object :retrofit2.Callback<GetSortData>{
-//            override fun onFailure(call: Call<GetSortData>, t: Throwable) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onResponse(call: Call<GetSortData>, response: Response<GetSortData>) {
-//                if (response.isSuccessful){
-//                    val sortTypeData = response.body()
-//                    sortTypeList.clear()
-//                    for (i in 0 until sortTypeData!!.AllSort.size){
-//                        sortTypeList.add(sortTypeData.AllSort[i].name)
-//                    }
-//                    val spinnerAdapter = ArrayAdapter(this@BuyActivity, android.R.layout.simple_spinner_dropdown_item, sortTypeList)
-//                    spinner.adapter = spinnerAdapter
-//                }
-//            }
-//        })
-
-        val list = listOf("糧食", "軍事", "特殊")
-
-        tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab) {
-               when(tab.position){
-                   0 ->{
-                       sortname = list[0]
-                       sortid = 1
-                       apiInterface.getSortItem(
-                           sortid
-                       ).enqueue(object :Callback<MutableList<SortItemData>>{
-                           override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
-
-                           }
-
-                           override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
-                               if (response.code() == 200){
-                                   val itemList = response.body()!!
-                                       .map {
-                                           Item(
-                                               it.id,
-                                               sortname,
-                                               it.item_name,
-                                               it.price,
-                                               it.stock,
-                                               it.pic
-                                           )
-                                       }
-                                       .sortedBy { it.id }
-                                   adapter.update(itemList)
-                               }
-                           }
-                       })
-                   }
-
-                   1 ->{
-                       sortname = list[1]
-                       sortid = 2
-                       apiInterface.getSortItem(
-                           sortid
-                       ).enqueue(object :Callback<MutableList<SortItemData>>{
-                           override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
-
-                           }
-
-                           override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
-                               if (response.code() == 200){
-                                   val itemList = response.body()!!
-                                       .map {
-                                           Item(
-                                               it.id,
-                                               sortname,
-                                               it.item_name,
-                                               it.price,
-                                               it.stock,
-                                               it.pic
-                                           )
-                                       }
-                                       .sortedBy { it.id }
-                                   adapter.update(itemList)
-                               }
-                           }
-                       })
-                   }
-
-                   2 ->{
-                       sortname = list[2]
-                       sortid = 3
-                       apiInterface.getSortItem(
-                           sortid
-                       ).enqueue(object :Callback<MutableList<SortItemData>>{
-                           override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
-
-                           }
-
-                           override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
-                               if (response.code() == 200){
-                                   val itemList = response.body()!!
-                                       .map {
-                                           Item(
-                                               it.id,
-                                               sortname,
-                                               it.item_name,
-                                               it.price,
-                                               it.stock,
-                                               it.pic
-                                           )
-                                       }
-                                       .sortedBy { it.id }
-                                   adapter.update(itemList)
-                               }
-                           }
-                       })
-                   }
-               }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-        })
-
         sortname = list[0]
         sortid = 1
         apiInterface.getSortItem(
             sortid
         ).enqueue(object :Callback<MutableList<SortItemData>>{
             override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
-
             }
 
             override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
@@ -269,114 +146,239 @@ class BuyActivity : AppCompatActivity() {
                             )
                         }
                         .sortedBy { it.id }
-                    adapter.update(itemList)
+                        .toMutableList()
+                    pAdapter = pAdapter(this@BuyActivity)
+                    viewpager.adapter = pAdapter
+                    pAdapter.adapter.update(itemList)
+
+                    pAdapter.adapter.setclickedListener(object :
+                        SortItemAdapter.clickedListener{
+                        override fun modifyItemData(id: Int, item_name: String, sort_id: Int, sort_name: String, price: Int, stock: Int, pic: String) {
+                            if (userLevel.toInt() < 3 && sortid == 3  ){
+                                Toast.makeText(this@BuyActivity, "想買齁！請洽管理者 ~ ~ ~", Toast.LENGTH_SHORT).show()
+                            }
+                            else{
+                                val inflater = this@BuyActivity.layoutInflater
+                                val view = inflater.inflate(R.layout.alert_layout, null)
+                                val builder = AlertDialog.Builder(this@BuyActivity)
+                                    .setView(view)
+                                    .show()
+                                val itemName = view.findViewById<TextView>(R.id.textViewItem)
+                                val editCount = view.findViewById<EditText>(R.id.editNumber)
+                                val btnBuy = view.findViewById<TextView>(R.id.textBuy)
+                                val btnCancel = view.findViewById<TextView>(R.id.textCancel)
+                                val count = "庫存只剩"+ "$stock"
+                                editCount.hint = count
+                                itemName.text = item_name
+                                btnBuy.setOnClickListener {
+                                    if (editCount.text.isEmpty()){
+                                        Toast.makeText(this@BuyActivity, "請輸入購買數量齁！", Toast.LENGTH_SHORT).show()
+                                    }
+                                    else if (editCount.text.toString() == "0"){
+                                        Toast.makeText(this@BuyActivity, "正常人會按取消！", Toast.LENGTH_SHORT).show()
+                                    }
+                                    else if (editCount.text.toString().toInt() > stock ){
+                                        Toast.makeText(this@BuyActivity, "超過購買數量，請重新輸入！", Toast.LENGTH_SHORT).show()
+                                        editCount.setText("")
+                                    }
+                                    else if (editCount.text.toString().toInt() * price > userBalance.toInt() ){
+                                        Toast.makeText(this@BuyActivity, "餘額不足哦！請重新輸入！", Toast.LENGTH_SHORT).show()
+                                        editCount.setText("")
+                                    }
+                                    else{
+                                        buyBody = BuyBody(userAccount, id, editCount.text.toString().toInt())
+                                        apiInterface.buy(
+                                            token,
+                                            buyBody
+                                        ).enqueue(object :retrofit2.Callback<BuyData>{
+                                            override fun onFailure(call: Call<BuyData>, t: Throwable) {
+                                                Toast.makeText(this@BuyActivity, t.toString(), Toast.LENGTH_SHORT).show()
+                                            }
+
+                                            override fun onResponse(call: Call<BuyData>, response: Response<BuyData>) {
+                                                if (response.code() == 201){
+                                                    val data = response.body()
+                                                    Toast.makeText(this@BuyActivity, data!!.data.item.item_name+"已購買!", Toast.LENGTH_SHORT).show()
+                                                    userBalance = data.data.balance.toString()
+                                                    shared.setBalance(userBalance)
+                                                    userScore = data.data.score.toString()
+                                                    shared.setScore(userScore)
+                                                    textUserBalance.text = userBalance
+                                                    textUserScore.text = userScore
+                                                    if (!data.data.achevement.isNullOrEmpty()){
+                                                        val toast = Toast(this@BuyActivity)
+                                                        toast.setGravity(Gravity.TOP, 0, 50)
+                                                        toast.duration = Toast.LENGTH_SHORT
+                                                        toast.view = View.inflate(this@BuyActivity, R.layout.toast_layout,null)
+                                                        toast.show()
+                                                    }
+
+                                                    apiInterface.getSortItem(
+                                                        sortid
+                                                    ).enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
+                                                        override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
+
+                                                        }
+                                                        override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
+                                                            if (response.code() == 200){
+                                                                val itemList = response.body()!!
+                                                                    .map {
+                                                                        Item(
+                                                                            it.id,
+                                                                            sortname,
+                                                                            it.item_name,
+                                                                            it.price,
+                                                                            it.stock,
+                                                                            it.pic
+                                                                        )
+                                                                    }
+                                                                    .sortedBy { it.id }
+                                                                    .toMutableList()
+                                                                pAdapter.adapter.update(itemList)
+                                                            }
+                                                        }
+                                                    })
+
+                                                    builder.dismiss()
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+
+                                btnCancel.setOnClickListener {
+                                    builder.dismiss()
+                                }
+                            }
+                        }
+                    })
+
+
                 }
             }
         })
 
-        adapter = SortItemAdapter()
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        val listener = object : ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+            }
 
-        adapter.setclickedListener(object :
-            SortItemAdapter.clickedListener{
-            override fun modifyItemData(id: Int, item_name: String, sort_id: Int, sort_name: String, price: Int, stock: Int, pic: String) {
-                if (userLevel.toInt() < 3 && sortid == 3  ){
-                    Toast.makeText(this@BuyActivity, "想買齁！請洽管理者 ~ ~ ~", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    val inflater = this@BuyActivity.layoutInflater
-                    val view = inflater.inflate(R.layout.alert_layout, null)
-                    val builder = AlertDialog.Builder(this@BuyActivity)
-                        .setView(view)
-                        .show()
-                    val itemName = view.findViewById<TextView>(R.id.textViewItem)
-                    val editCount = view.findViewById<EditText>(R.id.editNumber)
-                    val btnBuy = view.findViewById<TextView>(R.id.textBuy)
-                    val btnCancel = view.findViewById<TextView>(R.id.textCancel)
-                    val count = "庫存只剩"+ "$stock"
-                    editCount.hint = count
-                    itemName.text = item_name
-                    btnBuy.setOnClickListener {
-                        if (editCount.text.isEmpty()){
-                            Toast.makeText(this@BuyActivity, "請輸入購買數量齁！", Toast.LENGTH_SHORT).show()
-                        }
-                        else if (editCount.text.toString() == "0"){
-                            Toast.makeText(this@BuyActivity, "正常人會按取消！", Toast.LENGTH_SHORT).show()
-                        }
-                        else if (editCount.text.toString().toInt() > stock ){
-                            Toast.makeText(this@BuyActivity, "超過購買數量，請重新輸入！", Toast.LENGTH_SHORT).show()
-                            editCount.setText("")
-                        }
-                        else if (editCount.text.toString().toInt() * price > userBalance.toInt() ){
-                            Toast.makeText(this@BuyActivity, "餘額不足哦！請重新輸入！", Toast.LENGTH_SHORT).show()
-                            editCount.setText("")
-                        }
-                        else{
-                            buyBody = BuyBody(userAccount, id, editCount.text.toString().toInt())
-                            apiInterface.buy(
-                                token,
-                                buyBody
-                            ).enqueue(object :retrofit2.Callback<BuyData>{
-                                override fun onFailure(call: Call<BuyData>, t: Throwable) {
-                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
 
-                                override fun onResponse(call: Call<BuyData>, response: Response<BuyData>) {
-                                    if (response.code() == 201){
-                                        val data = response.body()
-                                        Toast.makeText(this@BuyActivity, data!!.data.item.item_name+"已購買!", Toast.LENGTH_SHORT).show()
-                                        userBalance = data.data.balance.toString()
-                                        shared.setBalance(userBalance)
-                                        userScore = data.data.score.toString()
-                                        shared.setScore(userScore)
-                                        textUserBalance.text = userBalance
-                                        textUserScore.text = userScore
-//                                        musicplayer.start()
-                                        if (!data.data.achevement.isNullOrEmpty()){
-                                            val toast = Toast(this@BuyActivity)
-                                            toast.setGravity(Gravity.TOP, 0, 50)
-                                            toast.duration = Toast.LENGTH_SHORT
-                                            toast.view = View.inflate(this@BuyActivity, R.layout.toast_layout,null)
-                                            toast.show()
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    0 -> {
+                        sortname = list[0]
+                        sortid = 1
+                        apiInterface.getSortItem(
+                            sortid
+                        ).enqueue(object :Callback<MutableList<SortItemData>>{
+                            override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
+
+                            }
+
+                            override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
+                                if (response.code() == 200){
+                                    val item0List = response.body()!!
+                                        .map {
+                                            Item(
+                                                it.id,
+                                                sortname,
+                                                it.item_name,
+                                                it.price,
+                                                it.stock,
+                                                it.pic
+                                            )
                                         }
-
-                                            apiInterface.getSortItem(
-                                                sortid
-                                            ).enqueue(object :retrofit2.Callback<MutableList<SortItemData>>{
-                                            override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
-
-                                            }
-                                            override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
-                                                if (response.code() == 200){
-                                                    val itemList = response.body()!!
-                                                        .map {
-                                                            Item(
-                                                                it.id,
-                                                                sortname,
-                                                                it.item_name,
-                                                                it.price,
-                                                                it.stock,
-                                                                it.pic
-                                                            )
-                                                        }
-                                                        .sortedBy { it.id }
-                                                    adapter.update(itemList)
-                                                }
-                                            }
-                                        })
-
-                                        builder.dismiss()
-                                    }
+                                        .sortedBy { it.id }
+                                        .toMutableList()
+                                    pAdapter.adapter.update(item0List)
                                 }
-                            })
-                        }
+                            }
+                        })
                     }
+                    1 -> {
+                        sortname = list[1]
+                        sortid = 2
+                        apiInterface.getSortItem(
+                            sortid
+                        ).enqueue(object :Callback<MutableList<SortItemData>>{
+                            override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
 
-                    btnCancel.setOnClickListener {
-                        builder.dismiss()
+                            }
+
+                            override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
+                                if (response.code() == 200){
+                                    val item1List = response.body()!!
+                                        .map {
+                                            Item(
+                                                it.id,
+                                                sortname,
+                                                it.item_name,
+                                                it.price,
+                                                it.stock,
+                                                it.pic
+                                            )
+                                        }
+                                        .sortedBy { it.id }
+                                        .toMutableList()
+                                    pAdapter.adapter.update(item1List)
+                                }
+                            }
+                        })
+                    }
+                    2 -> {
+                        sortname = list[2]
+                        sortid = 3
+                        apiInterface.getSortItem(
+                            sortid
+                        ).enqueue(object :Callback<MutableList<SortItemData>>{
+                            override fun onFailure(call: Call<MutableList<SortItemData>>, t: Throwable) {
+
+                            }
+
+                            override fun onResponse(call: Call<MutableList<SortItemData>>, response: Response<MutableList<SortItemData>> ) {
+                                if (response.code() == 200){
+                                    val item2List = response.body()!!
+                                        .map {
+                                            Item(
+                                                it.id,
+                                                sortname,
+                                                it.item_name,
+                                                it.price,
+                                                it.stock,
+                                                it.pic
+                                            )
+                                        }
+                                        .sortedBy { it.id }
+                                        .toMutableList()
+                                    pAdapter.adapter.update(item2List)
+                                }
+                            }
+                        })
                     }
                 }
+            }
+        }
+
+        viewpager.addOnPageChangeListener(listener)
+
+        tabLayout.setupWithViewPager(viewpager)
+
+        tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab) {
+               when(tab.position){
+                   0 ->{
+                   }
+                   1 ->{
+                   }
+                   2 ->{
+                   }
+               }
+            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
             }
         })
 
@@ -387,7 +389,6 @@ class BuyActivity : AppCompatActivity() {
                         token
                     ).enqueue(object :retrofit2.Callback<RenewData>{
                     override fun onFailure(call: Call<RenewData>, t: Throwable) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
                     override fun onResponse(call: Call<RenewData>, response: Response<RenewData>) {
                         if (response.code() == 200){
@@ -462,11 +463,6 @@ class BuyActivity : AppCompatActivity() {
             imageViewHome.scaleType = ImageView.ScaleType.CENTER
         }
         else imageViewHome.scaleType = ImageView.ScaleType.FIT_CENTER
-    }
-
-    override fun onDestroy() {
-//        musicplayer.stop()
-        super.onDestroy()
     }
 
     override fun onBackPressed() {

@@ -14,7 +14,7 @@ class SortItemAdapter:RecyclerView.Adapter<SortItemAdapter.ViewHolder>() {
     val list = listOf<String>("糧食", "軍事", "特殊")
     var sortid :Int = 0
 
-    private var inputList = listOf<Item>()
+    private var inputList = mutableListOf<Item>()
     private var itemClickListener: clickedListener? = null
 
     interface clickedListener{
@@ -75,15 +75,15 @@ class SortItemAdapter:RecyclerView.Adapter<SortItemAdapter.ViewHolder>() {
                 itemView.setOnClickListener {
                     if (item.sort_name == "糧食") {
                         sortid=1
-                        itemClickListener?.modifyItemData(item.id, item.item_name, sortid, item.sort_name, item.price, item.stock ?: 0, item.pic ?: "")
+                        itemClickListener?.modifyItemData(item.id, item.item_name, sortid, item.sort_name, item.price, item.stock, item.pic ?: "")
                     }
                     else if(item.sort_name == "軍事") {
                         sortid = 2
-                        itemClickListener?.modifyItemData(item.id, item.item_name, sortid, item.sort_name, item.price, item.stock ?: 0, item.pic ?: "")
+                        itemClickListener?.modifyItemData(item.id, item.item_name, sortid, item.sort_name, item.price, item.stock, item.pic ?: "")
                     }
                     else if(item.sort_name == "特殊") {
                         sortid = 3
-                        itemClickListener?.modifyItemData(item.id, item.item_name, sortid, item.sort_name, item.price, item.stock ?: 0, item.pic ?: "")
+                        itemClickListener?.modifyItemData(item.id, item.item_name, sortid, item.sort_name, item.price, item.stock, item.pic ?: "")
                     }
                 }
             }
@@ -97,7 +97,7 @@ class SortItemAdapter:RecyclerView.Adapter<SortItemAdapter.ViewHolder>() {
     }
 
 
-    fun update(newList: List<Item>){
+    fun update(newList: MutableList<Item>){
         inputList = newList
         notifyDataSetChanged()
     }
