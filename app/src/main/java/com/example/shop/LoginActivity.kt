@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                 body = LoginBody(editLogaccount.text.toString(), editLogpass.text.toString())
                 btn_login.isEnabled = false
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("http://35.234.60.173")
+                    .baseUrl("http://35.229.181.103")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 val apiInterface = retrofit.create(APIInterface::class.java)

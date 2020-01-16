@@ -119,7 +119,7 @@ class BuyActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://35.234.60.173")
+            .baseUrl("http://35.229.181.103")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         apiInterface = retrofit.create(APIInterface::class.java)

@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
                                 body = ResBody(editResname.text.toString(), editResaccount.text.toString(), editRespass.text.toString(), type)
                                 val retrofit = Retrofit.Builder()
-                                    .baseUrl("http://35.234.60.173")
+                                    .baseUrl("http://35.229.181.103")
                                     .addConverterFactory(GsonConverterFactory.create())
                                     .build()
                                 val apiInterface = retrofit.create(APIInterface::class.java)
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     override fun onResponse(call: Call<ResData>, response: Response<ResData>) {
-                                        if (response.code() == 200){
+                                        if (response.isSuccessful){
                                             val data = response.body()
                                             shared.setResName(data!!.create_date.name)
                                             shared.setResAccount(data.create_date.account)
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                                             btn_res.isEnabled = true
                                         }
                                         else {
-                                            Toast.makeText(this@MainActivity, "帳號重複哦！", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(this@MainActivity, "Server Error", Toast.LENGTH_LONG).show()
                                             btn_res.isEnabled = true
                                         }
                                     }
